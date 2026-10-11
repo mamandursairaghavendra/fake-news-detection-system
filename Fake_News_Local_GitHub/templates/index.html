@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Fake News Detection System</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #eef2f7;
+            color: #172033;
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           NAVBAR
+        ========================== */
+
+        .navbar {
+            height: 70px;
+            background: #111827;
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 7%;
+        }
+
+
+        .logo {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+
+        .logo span {
+            font-size: 25px;
+            margin-right: 8px;
+        }
+
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+        }
+
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+
+        .nav-links a:hover {
+            opacity: 0.75;
+        }
+
+
+        /* =========================
+           MAIN
+        ========================== */
+
+        .container {
+            max-width: 1150px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+
+        .hero {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+
+        .hero h1 {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+
+        .hero p {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+
+        /* =========================
+           CARDS
+        ========================== */
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 28px;
+
+            box-shadow:
+                0 8px 25px rgba(15, 23, 42, 0.08);
+        }
+
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+
+        .icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+            background: #e8efff;
+        }
+
+
+        .card h2 {
+            font-size: 20px;
+        }
+
+
+        .card-description {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+
+        /* =========================
+           TEXT INPUT
+        ========================== */
+
+        textarea {
+            width: 100%;
+            height: 210px;
+
+            padding: 16px;
+
+            border: 1px solid #d5dce7;
+            border-radius: 12px;
+
+            resize: vertical;
+
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+
+            outline: none;
+        }
+
+
+        textarea:focus {
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px rgba(37,99,235,.1);
+        }
+
+
+        /* =========================
+           IMAGE UPLOAD
+        ========================== */
+
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 14px;
+
+            min-height: 210px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            padding: 25px;
+
+            text-align: center;
+
+            background: #f8fafc;
+
+            cursor: pointer;
+        }
+
+
+        .upload-area:hover {
+            border-color: #2563eb;
+            background: #f1f5ff;
+        }
+
+
+        .upload-icon {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+
+        .upload-title {
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+
+        .upload-text {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+
+        input[type="file"] {
+            max-width: 100%;
+        }
+
+
+        /* =========================
+           IMAGE PREVIEW
+        ========================== */
+
+        #preview {
+            display: none;
+
+            max-width: 100%;
+            max-height: 180px;
+
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+
+        /* =========================
+           BUTTON
+        ========================== */
+
+        .button-area {
+            text-align: center;
+            margin: 28px 0;
+        }
+
+
+        button {
+            background: #2563eb;
+            color: white;
+
+            border: none;
+            border-radius: 11px;
+
+            padding: 15px 45px;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 6px 18px rgba(37,99,235,.25);
+        }
+
+
+        button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================
+           RESULT
+        ========================== */
+
+        .result-card {
+            margin-top: 25px;
+            padding: 30px;
+
+            border-radius: 18px;
+
+            background: white;
+
+            box-shadow:
+                0 8px 25px rgba(15, 23, 42, 0.08);
+        }
+
+
+        .result-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+
+        .result-title h2 {
+            font-size: 24px;
+        }
+
+
+        .prediction {
+            text-align: center;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            background: #f1f5ff;
+        }
+
+
+        .prediction-label {
+            color: #64748b;
+
+            font-size: 14px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .prediction-value {
+            font-size: 32px;
+
+            font-weight: bold;
+
+            margin-bottom: 20px;
+        }
+
+
+        .confidence-text {
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+
+        /* =========================
+           PROGRESS BAR
+        ========================== */
+
+        .progress {
+            width: 100%;
+            height: 14px;
+
+            background: #dbe3ef;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+
+        .progress-bar {
+            height: 100%;
+
+            width: {{ confidence or 0 }}%;
+
+            background: #2563eb;
+
+            border-radius: 20px;
+        }
+
+
+        /* =========================
+           EXTRACTED TEXT
+        ========================== */
+
+        .extracted {
+            margin-top: 25px;
+
+            padding: 22px;
+
+            background: #f8fafc;
+
+            border-radius: 14px;
+
+            border: 1px solid #e2e8f0;
+        }
+
+
+        .extracted h3 {
+            margin-bottom: 12px;
+            font-size: 17px;
+        }
+
+
+        .extracted-text {
+            white-space: pre-wrap;
+
+            color: #475569;
+
+            line-height: 1.6;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           ERROR
+        ========================== */
+
+        .error {
+            margin-top: 20px;
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            text-align: center;
+        }
+
+
+        /* =========================
+           INFORMATION
+        ========================== */
+
+        .info-section {
+            margin-top: 30px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+
+        .info-card {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 6px 20px rgba(15,23,42,.06);
+        }
+
+
+        .info-card h3 {
+            margin-bottom: 10px;
+
+            font-size: 17px;
+        }
+
+
+        .info-card p {
+            color: #64748b;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        footer {
+            text-align: center;
+
+            margin-top: 45px;
+
+            padding: 25px;
+
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media(max-width: 800px) {
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .info-section {
+                grid-template-columns: 1fr;
+            }
+
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+
+            .nav-links {
+                gap: 12px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NAVBAR
+========================== -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <span>🛡️</span>
+
+        AI Fake News Detector
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+
+        <a href="/dataset">
+            Dataset
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     MAIN
+========================== -->
+
+<div class="container">
+
+
+    <!-- HERO -->
+
+    <div class="hero">
+
+        <h1>
+            Fake News Detection System
+        </h1>
+
+
+        <p>
+            Detect potentially misleading news using
+            Artificial Intelligence and OCR technology.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         INPUT FORM
+    ========================== -->
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+        id="news-form"
+    >
+
+
+        <div class="grid">
+
+
+            <!-- =========================
+                 TEXT CARD
+            ========================== -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div class="icon">
+                        📝
+                    </div>
+
+
+                    <h2>
+                        Text Detection
+                    </h2>
+
+                </div>
+
+
+                <p class="card-description">
+
+                    Enter a news headline or article
+                    for AI analysis.
+
+                </p>
+
+
+                <textarea
+                    name="news_text"
+                    id="news-text"
+                    placeholder="Paste your news article or headline here..."
+                >{{ news_text }}</textarea>
+
+            </div>
+
+
+            <!-- =========================
+                 IMAGE CARD
+            ========================== -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div class="icon">
+                        🖼️
+                    </div>
+
+
+                    <h2>
+                        Image Detection
+                    </h2>
+
+                </div>
+
+
+                <p class="card-description">
+
+                    Upload a screenshot or image
+                    containing news text.
+
+                </p>
+
+
+                <label class="upload-area">
+
+
+                    <div class="upload-icon">
+                        📤
+                    </div>
+
+
+                    <div class="upload-title">
+
+                        Upload News Image
+
+                    </div>
+
+
+                    <div class="upload-text">
+
+                        PNG, JPG or JPEG
+
+                    </div>
+
+
+                    <input
+                        type="file"
+                        name="news_image"
+                        id="news-image"
+                        accept="image/png,image/jpeg,image/jpg"
+                    >
+
+
+                    <img
+                        id="preview"
+                        alt="Image preview"
+                    >
+
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             BUTTON
+        ========================== -->
+
+        <div class="button-area">
+
+            <button
+                type="submit"
+                id="analyze-button"
+            >
+
+                🔍 ANALYZE NEWS
+
+            </button>
+
+        </div>
+
+
+    </form>
+
+
+    <!-- =========================
+         ERROR
+    ========================== -->
+
+    {% if error %}
+
+    <div class="error">
+
+        ⚠️ {{ error }}
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =========================
+         RESULT
+    ========================== -->
+
+    {% if prediction %}
+
+    <div class="result-card">
+
+
+        <div class="result-title">
+
+            <h2>
+                🔎 Analysis Result
+            </h2>
+
+        </div>
+
+
+        <div class="prediction">
+
+
+            <div class="prediction-label">
+
+                AI PREDICTION
+
+            </div>
+
+
+            <div class="prediction-value">
+
+                {{ prediction }}
+
+            </div>
+
+
+            <div class="confidence-text">
+
+                Model Confidence:
+
+                <strong>
+
+                    {{ "%.2f"|format(confidence) }}%
+
+                </strong>
+
+            </div>
+
+
+            <div class="progress">
+
+                <div class="progress-bar"></div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =========================
+         OCR RESULT
+    ========================== -->
+
+    {% if extracted_text %}
+
+    <div class="result-card">
+
+
+        <div class="extracted">
+
+            <h3>
+
+                🔎 Text Extracted From Image
+
+            </h3>
+
+
+            <div class="extracted-text">
+
+                {{ extracted_text }}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =========================
+         INFORMATION
+    ========================== -->
+
+    <div class="info-section">
+
+
+        <div class="info-card">
+
+            <h3>
+
+                🤖 Artificial Intelligence
+
+            </h3>
+
+
+            <p>
+
+                Uses a pretrained transformer-based
+                language model to classify news text.
+
+            </p>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <h3>
+
+                👁️ OCR Technology
+
+            </h3>
+
+
+            <p>
+
+                Extracts text from uploaded news
+                screenshots using Tesseract OCR.
+
+            </p>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <h3>
+
+                📊 Confidence Score
+
+            </h3>
+
+
+            <p>
+
+                Displays the confidence returned by
+                the AI classification model.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================
+     FOOTER
+========================== -->
+
+<footer>
+
+    <p>
+
+        AI-Based Fake News Detection System
+
+    </p>
+
+
+    <p>
+
+        ⚠️ AI prediction is not independent fact verification.
+
+    </p>
+
+</footer>
+
+
+<!-- =========================
+     JAVASCRIPT
+========================== -->
+
+<script>
+
+    // ------------------------------------------
+    // IMAGE PREVIEW
+    // ------------------------------------------
+
+    const imageInput =
+        document.getElementById("news-image");
+
+    const preview =
+        document.getElementById("preview");
+
+
+    imageInput.addEventListener(
+        "change",
+        function(event) {
+
+            const file =
+                event.target.files[0];
+
+
+            if (file) {
+
+                preview.src =
+                    URL.createObjectURL(file);
+
+                preview.style.display =
+                    "block";
+
+            }
+
+        }
+    );
+
+
+    // ------------------------------------------
+    // CLEAR FORM WHEN F5 / BROWSER REFRESH
+    // ------------------------------------------
+
+    window.addEventListener(
+        "load",
+        function() {
+
+            const navigation =
+                performance.getEntriesByType(
+                    "navigation"
+                )[0];
+
+
+            if (
+                navigation &&
+                navigation.type === "reload"
+            ) {
+
+                // Clear text box
+                const textarea =
+                    document.getElementById(
+                        "news-text"
+                    );
+
+                if (textarea) {
+
+                    textarea.value = "";
+
+                }
+
+
+                // Clear image
+                if (imageInput) {
+
+                    imageInput.value = "";
+
+                }
+
+
+                // Hide image preview
+                if (preview) {
+
+                    preview.src = "";
+
+                    preview.style.display =
+                        "none";
+
+                }
+
+            }
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>

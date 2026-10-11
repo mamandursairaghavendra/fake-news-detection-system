@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f7fb; margin: 0; color: #1f2937; }
+        .wrap { max-width: 1100px; margin: 35px auto; padding: 20px; }
+        .top { display: flex; justify-content: space-between; align-items: center; }
+        a { color: #2563eb; text-decoration: none; }
+        .card { background: white; padding: 22px; border-radius: 14px; box-shadow: 0 8px 30px rgba(0,0,0,.08); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+        th { background: #f3f4f6; }
+        .error { background: #fee2e2; color: #991b1b; padding: 15px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="top">
+        <h1>Dataset Viewer</h1>
+        <a href="/">← Back to Detector</a>
+    </div>
+    <div class="card">
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% else %}
+            <p>Total records: <strong>{{ total }}</strong></p>
+            <table>
+                <thead>
+                    <tr>
+                    {% for column in columns %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for row in rows %}
+                    <tr>
+                    {% for column in columns %}
+                        <td>{{ row[column] }}</td>
+                    {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>
